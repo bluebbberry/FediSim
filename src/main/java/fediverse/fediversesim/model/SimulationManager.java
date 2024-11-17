@@ -1,12 +1,15 @@
 package fediverse.fediversesim.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Data
 public class SimulationManager {
-    private List<FediverseServer> servers;
-    private Random random;
+    private final List<FediverseServer> servers;
+    private final Random random;
 
     public SimulationManager() {
         this.servers = new ArrayList<>();
@@ -15,10 +18,6 @@ public class SimulationManager {
 
     public void addServer(FediverseServer server) {
         servers.add(server);
-    }
-
-    public List<FediverseServer> getServers() {
-        return servers;
     }
 
     public void simulateYear(int year) {

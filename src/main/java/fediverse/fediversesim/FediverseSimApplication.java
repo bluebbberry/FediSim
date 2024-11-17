@@ -17,9 +17,9 @@ public class FediverseSimApplication {
 		FediverseSimulation simulation = new FediverseSimulation();
 
 		// Create sample servers
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server A", 1000000, 10000));
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server B", 1500000, 15000));
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server C", 2000000, 20000));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server A", 1000000, 10000, 300));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server B", 1500000, 15000, 300));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server C", 2000000, 20000, 300));
 
 		simulation.runSimulation();
 	}

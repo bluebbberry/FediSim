@@ -6,14 +6,17 @@ import lombok.Data;
 public class FediverseServer {
     private String name;
     private double economicCapital;
+    // social capital
     private long usersPerMonth;
+    private double computationalCapital;
     private SimulationManager simulationManager;
 
-    public FediverseServer(SimulationManager simulationManager, String name, double initialEconomicCapital, int initialUsersPerMonth) {
+    public FediverseServer(SimulationManager simulationManager, String name, double initialEconomicCapital, int initialUsersPerMonth, double initialComputationCapital) {
         this.simulationManager = simulationManager;
         this.name = name;
         this.economicCapital = initialEconomicCapital;
         this.usersPerMonth = initialUsersPerMonth;
+        this.computationalCapital = initialComputationCapital;
     }
 
     public void distributeResources(double totalUsers, double totalCapital) {

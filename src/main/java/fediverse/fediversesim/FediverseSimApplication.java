@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FediversesimApplication {
+public class FediverseSimApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FediversesimApplication.class, args);
+		SpringApplication.run(FediverseSimApplication.class, args);
 	}
 
 }

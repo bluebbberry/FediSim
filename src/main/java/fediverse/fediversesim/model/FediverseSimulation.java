@@ -12,6 +12,7 @@ public class FediverseSimulation {
 
     public void runSimulation() {
         int year = 2024;
+        simulationManager.displayResults(year);
         while (year <= 2034) {
             simulationManager.simulateYear(year);
             simulationManager.displayResults(year);

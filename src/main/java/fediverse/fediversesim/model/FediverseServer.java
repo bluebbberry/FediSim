@@ -9,6 +9,14 @@ public class FediverseServer {
     // social capital
     private long usersPerMonth;
     private double computationalCapital;
+    // federation (TODO: add degree of federation to all other servers)
+    private double migrationCost;
+    // content
+    private double contentLength;
+    private double contentImmersion;
+    private double leftLeaningPopulation;
+    private double liberalismLeaningPopulation;
+    private double conservativeLeaningPopulation;
     private SimulationManager simulationManager;
 
     public FediverseServer(SimulationManager simulationManager, String name, double initialEconomicCapital, int initialUsersPerMonth, double initialComputationCapital) {

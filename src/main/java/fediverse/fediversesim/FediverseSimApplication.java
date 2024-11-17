@@ -12,17 +12,34 @@ public class FediverseSimApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FediverseSimApplication.class, args);
 
-		SimulationManager simulationManager = new SimulationManager();
-
 		FediverseSimulation simulation = new FediverseSimulation();
 
+		SimulationManager simulationManager = simulation.getSimulationManager();
+
 		// Create sample servers
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server A", 1000000, 10000, 300));
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server B", 1500000, 15000, 300));
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server C", 2000000, 20000, 300));
+		simulation.getSimulationManager().addServer(new FediverseServer(
+				simulationManager,
+				"Lemmy",
+				1000,
+				1000,
+				300));
+		simulation.getSimulationManager().addServer(new FediverseServer(
+				simulationManager,
+				"Bluesky",
+				1000,
+				4000,
+				300));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager,
+				"Mastodon",
+				15000,
+				15000,
+				300));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager,
+				"Threads",
+				2000000,
+				20000,
+				300));
 
 		simulation.runSimulation();
 	}
-
 }
-

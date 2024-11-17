@@ -3,10 +3,10 @@ package fediverse.fediversesim.model;
 import lombok.Data;
 
 @Data
-public class SocialMediaSimulation {
+public class FediverseSimulation {
     private SimulationManager simulationManager;
 
-    public SocialMediaSimulation() {
+    public FediverseSimulation() {
         this.simulationManager = new SimulationManager();
     }
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class SimulationManager {
-    private List<SocialMediaServer> servers;
+    private List<FediverseServer> servers;
     private Random random;
 
     public SimulationManager() {
@@ -13,49 +13,56 @@ public class SimulationManager {
         this.random = new Random();
     }
 
-    public void addServer(SocialMediaServer server) {
+    public void addServer(FediverseServer server) {
         servers.add(server);
     }
 
-    public List<SocialMediaServer> getServers() {
+    public List<FediverseServer> getServers() {
         return servers;
     }
 
     public void simulateYear(int year) {
         double totalUsers = 0;
-        double totalCapital = 0;
 
-        // Distribute resources among servers
-        for (SocialMediaServer server : servers) {
-            server.distributeResources(totalUsers + server.getUsersPerMonth(), totalCapital + server.getEconomicCapital());
+        // Calculate overall capital
+        for (FediverseServer server : servers) {
             totalUsers += server.getUsersPerMonth();
-            totalCapital += server.getEconomicCapital();
         }
 
-        // Simulate user growth
-        double growthRate = random.nextDouble() * 100; // Random between 0% and 100%
-        totalUsers *= (1 + growthRate / 100);
+        // Simulate user migration
+        double migrationRate = random.nextDouble() * 100; // Random between 0% and 100%
+        long usersMigratingTotal = (long) (totalUsers * migrationRate / 100);
+        long usersMigratingLeft = usersMigratingTotal;
 
-        // Distribute new users among servers
-        for (SocialMediaServer server : servers) {
-            int newUsers = (int) ((server.getUsersPerMonth() / totalUsers) * totalUsers);
-            server.setUsersPerMonth(newUsers);
+        // Distribute migrating users among servers
+        while(usersMigratingLeft > 0) {
+            // pick a random server, migrate users from there to another random server
+            FediverseServer losingFediverseServer = getRandomNonEmptyServer(null);
+            FediverseServer winningFediverseServerB = getRandomNonEmptyServer(losingFediverseServer);
+            long newUsers = (long) (usersMigratingLeft * random.nextDouble());
+            if (newUsers == 0) newUsers = 1;
+            if (losingFediverseServer.getUsersPerMonth() < newUsers) {
+                newUsers = losingFediverseServer.getUsersPerMonth();
+            }
+            usersMigratingLeft -= newUsers;
+            losingFediverseServer.setUsersPerMonth(losingFediverseServer.getUsersPerMonth() - newUsers);
+            winningFediverseServerB.setUsersPerMonth(winningFediverseServerB.getUsersPerMonth() + newUsers);
         }
+    }
 
-        // Simulate economic capital growth
-        double capitalGrowthRate = random.nextDouble() * 100; // Random between 0% and 100%
-        totalCapital *= (1 + capitalGrowthRate / 100);
-
-        // Distribute new capital among servers
-        for (SocialMediaServer server : servers) {
-            double newCapital = (server.getEconomicCapital() / totalCapital) * totalCapital;
-            server.setEconomicCapital(newCapital);
+    private FediverseServer getRandomNonEmptyServer(FediverseServer exception) {
+        List<FediverseServer> nonEmptyServers = servers.stream().filter(s -> s.getUsersPerMonth() > 0).toList();
+        int randomServerId = (int)(random.nextDouble() * (nonEmptyServers.size() - 1));
+        if (exception != null) {
+            if (nonEmptyServers.get(randomServerId) == exception) randomServerId++;
+            if (randomServerId >= nonEmptyServers.size()) randomServerId = 0;
         }
+        return nonEmptyServers.get(randomServerId);
     }
 
     public void displayResults(int year) {
         System.out.println("=== Year " + year + " ===");
-        for (SocialMediaServer server : servers) {
+        for (FediverseServer server : servers) {
             System.out.println(server.toString());
         }
     }

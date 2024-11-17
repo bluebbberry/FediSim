@@ -1,8 +1,8 @@
 package fediverse.fediversesim;
 
 import fediverse.fediversesim.model.SimulationManager;
-import fediverse.fediversesim.model.SocialMediaServer;
-import fediverse.fediversesim.model.SocialMediaSimulation;
+import fediverse.fediversesim.model.FediverseServer;
+import fediverse.fediversesim.model.FediverseSimulation;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,12 +14,12 @@ public class FediverseSimApplication {
 
 		SimulationManager simulationManager = new SimulationManager();
 
-		SocialMediaSimulation simulation = new SocialMediaSimulation();
+		FediverseSimulation simulation = new FediverseSimulation();
 
 		// Create sample servers
-		simulation.getSimulationManager().addServer(new SocialMediaServer(simulationManager, "Server A", 1000000, 10000));
-		simulation.getSimulationManager().addServer(new SocialMediaServer(simulationManager, "Server B", 1500000, 15000));
-		simulation.getSimulationManager().addServer(new SocialMediaServer(simulationManager, "Server C", 2000000, 20000));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server A", 1000000, 10000));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server B", 1500000, 15000));
+		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager, "Server C", 2000000, 20000));
 
 		simulation.runSimulation();
 	}

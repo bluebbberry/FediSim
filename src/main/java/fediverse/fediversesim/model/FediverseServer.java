@@ -3,13 +3,13 @@ package fediverse.fediversesim.model;
 import lombok.Data;
 
 @Data
-public class SocialMediaServer {
+public class FediverseServer {
     private String name;
     private double economicCapital;
-    private int usersPerMonth;
+    private long usersPerMonth;
     private SimulationManager simulationManager;
 
-    public SocialMediaServer(SimulationManager simulationManager, String name, double initialEconomicCapital, int initialUsersPerMonth) {
+    public FediverseServer(SimulationManager simulationManager, String name, double initialEconomicCapital, int initialUsersPerMonth) {
         this.simulationManager = simulationManager;
         this.name = name;
         this.economicCapital = initialEconomicCapital;

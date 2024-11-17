@@ -1,0 +1,2 @@
+# FediverseSim
+Fediverse simulation game

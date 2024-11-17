@@ -23,6 +23,6 @@ public class SocialMediaServer {
 
     @Override
     public String toString() {
-        return this.economicCapital + "€ - " + this.usersPerMonth + " MAU";
+        return this.name + " | " + this.economicCapital + "€ | " + this.usersPerMonth + " MAU";
     }
 }

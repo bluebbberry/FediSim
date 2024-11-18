@@ -1,4 +1,4 @@
 package fediverse.fediversesim.model;
 
-public class FediverseCollective {
+public class Collective {
 }

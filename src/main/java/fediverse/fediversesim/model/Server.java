@@ -1,9 +1,10 @@
 package fediverse.fediversesim.model;
 
+import fediverse.fediversesim.services.SimulationService;
 import lombok.Data;
 
 @Data
-public class FediverseServer {
+public class Server {
     private String name;
     private double economicCapital;
     // social capital
@@ -17,19 +18,14 @@ public class FediverseServer {
     private double leftLeaningPopulation;
     private double liberalismLeaningPopulation;
     private double conservativeLeaningPopulation;
-    private SimulationManager simulationManager;
+    private SimulationService simulationService;
 
-    public FediverseServer(SimulationManager simulationManager, String name, double initialEconomicCapital, int initialUsersPerMonth, double initialComputationCapital) {
-        this.simulationManager = simulationManager;
+    public Server(SimulationService simulationService, String name, double initialEconomicCapital, int initialUsersPerMonth, double initialComputationCapital) {
+        this.simulationService = simulationService;
         this.name = name;
         this.economicCapital = initialEconomicCapital;
         this.usersPerMonth = initialUsersPerMonth;
         this.computationalCapital = initialComputationCapital;
-    }
-
-    public void distributeResources(double totalUsers, double totalCapital) {
-        economicCapital = totalCapital / (double) simulationManager.getServers().size();
-        usersPerMonth = (int) (totalUsers / (double) simulationManager.getServers().size());
     }
 
     @Override

@@ -1,4 +1,4 @@
 package fediverse.fediversesim.model;
 
-public class FediverseProtocol {
+public class Protocol {
 }

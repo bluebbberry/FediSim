@@ -1,8 +1,8 @@
 package fediverse.fediversesim;
 
-import fediverse.fediversesim.model.SimulationManager;
-import fediverse.fediversesim.model.FediverseServer;
-import fediverse.fediversesim.model.FediverseSimulation;
+import fediverse.fediversesim.services.SimulationService;
+import fediverse.fediversesim.model.Server;
+import fediverse.fediversesim.model.Fediverse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,34 +12,34 @@ public class FediverseSimApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FediverseSimApplication.class, args);
 
-		FediverseSimulation simulation = new FediverseSimulation();
+		SimulationService simulationService = new SimulationService();
 
-		SimulationManager simulationManager = simulation.getSimulationManager();
+		Fediverse fediverse = new Fediverse();
 
 		// Create sample servers
-		simulation.getSimulationManager().addServer(new FediverseServer(
-				simulationManager,
+		fediverse.getServers().add(new Server(
+				simulationService,
 				"Lemmy",
 				1000,
 				1000,
 				300));
-		simulation.getSimulationManager().addServer(new FediverseServer(
-				simulationManager,
+		fediverse.getServers().add(new Server(
+				simulationService,
 				"Bluesky",
 				1000,
 				4000,
 				300));
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager,
+		fediverse.getServers().add(new Server(simulationService,
 				"Mastodon",
 				15000,
 				15000,
 				300));
-		simulation.getSimulationManager().addServer(new FediverseServer(simulationManager,
+		fediverse.getServers().add(new Server(simulationService,
 				"Threads",
 				2000000,
 				20000,
 				300));
 
-		simulation.runSimulation();
+		simulationService.runSimulation(fediverse);
 	}
 }

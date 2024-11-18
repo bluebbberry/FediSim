@@ -3,6 +3,7 @@ package fediverse.fediversesim;
 import fediverse.fediversesim.services.SimulationService;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.model.Fediverse;
+import fediverse.fediversesim.services.simulations.SimpleSimulationService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,7 +13,7 @@ public class FediverseSimApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FediverseSimApplication.class, args);
 
-		SimulationService simulationService = new SimulationService();
+		SimulationService simulationService = new SimpleSimulationService();
 
 		Fediverse fediverse = new Fediverse();
 

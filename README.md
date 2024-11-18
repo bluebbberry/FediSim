@@ -24,3 +24,5 @@ API-requests can be send to `/simulate``-POST with the following JSON-body:
     "year": 2024
 }
 ```
+
+Based on rational choice theory with the goal of the Fediverse helping all of humanity.

@@ -5,14 +5,22 @@ Provides an API to simulate a customizable fediverse model for the next few year
 
 API-requests can be send to `/simulate``-POST with the following JSON-body:
 
-````json
+```json
 {
     "servers": [
         {
-            "name": "lemmy",
+            "name": "Lemmy",
             "usersPerMonth": 3000
+        },
+        {
+          "name": "Mastodon",
+          "usersPerMonth": 40000
+        },
+        {
+          "name": "Bluesky",
+          "usersPerMonth": 80000
         }
     ],
-    "year": 1000
+    "year": 2024
 }
-````
+```

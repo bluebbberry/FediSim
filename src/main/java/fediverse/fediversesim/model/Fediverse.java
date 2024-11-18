@@ -16,4 +16,14 @@ public class Fediverse {
     public Fediverse() {
         this.servers = new ArrayList<>();
     }
+
+    public String toString() {
+        StringBuilder build = new StringBuilder();
+        build.append(this.year);
+        this.servers.forEach(s -> {
+            build.append(" ");
+            build.append(s.toString());
+        });
+        return build.toString();
+    }
 }

@@ -2,10 +2,12 @@ package fediverse.fediversesim.services.simulations;
 
 import fediverse.fediversesim.model.Fediverse;
 import fediverse.fediversesim.model.Server;
+import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,17 +19,23 @@ public class SimpleSimulationService extends SimulationService {
         this.random = new Random();
     }
 
-    public String runSimulation(Fediverse fediverse) {
+    public void runSimulation(Simulation simulation) {
+        List<String> result = new ArrayList<>();
+        Fediverse fediverse = simulation.getFediverse();
+
         int year = 2024;
         fediverse.setYear(year);
         this.displayResults(fediverse);
+        result.add(fediverse.toString());
         while (year <= 2034) {
-            this.simulateYear(fediverse);
-            this.displayResults(fediverse);
             year++;
             fediverse.setYear(year);
+            this.simulateYear(fediverse);
+            this.displayResults(fediverse);
+            result.add(fediverse.toString());
         }
-        return "success";
+
+        simulation.setResult(result);
     }
 
     public void simulateYear(Fediverse fediverse) {

@@ -1,5 +1,6 @@
 package fediverse.fediversesim;
 
+import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.model.Fediverse;
@@ -34,6 +35,6 @@ public class FediverseSimApplication {
 		fediverse.getServers().add(new Server(simulationService,
 				"Threads",
 				20000));
-		simulationService.runSimulation(fediverse);
+		simulationService.runSimulation(new Simulation(fediverse));
 	}
 }

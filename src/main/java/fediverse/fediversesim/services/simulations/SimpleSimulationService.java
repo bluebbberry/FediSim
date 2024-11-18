@@ -4,19 +4,20 @@ import fediverse.fediversesim.model.Fediverse;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.services.SimulationService;
 import lombok.Data;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 
-@Data
-public class SimpleSimulationService implements SimulationService {
-    private Random random;
+@Service
+public class SimpleSimulationService extends SimulationService {
+    private final Random random;
 
     public SimpleSimulationService() {
         this.random = new Random();
     }
 
-    public void runSimulation(Fediverse fediverse) {
+    public String runSimulation(Fediverse fediverse) {
         int year = 2024;
         fediverse.setYear(year);
         this.displayResults(fediverse);
@@ -26,6 +27,7 @@ public class SimpleSimulationService implements SimulationService {
             year++;
             fediverse.setYear(year);
         }
+        return "success";
     }
 
     public void simulateYear(Fediverse fediverse) {

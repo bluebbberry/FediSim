@@ -1,22 +1,24 @@
 package fediverse.fediversesim.services.simulations;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.springframework.stereotype.Service;
+
 import fediverse.fediversesim.model.Fediverse;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 class MostLikelyMigrationMatrix {
-    public HashMap<Server, HashMap<Server, Long>> values;
+    public Map<Server, Map<Server, Long>> values;
 }
 
 class MigrationResultsMatrix {
-    public HashMap<Server, Long> values;
+    public Map<Server, Map<Server, Long>> values;
 }
 
 @Service
@@ -53,7 +55,7 @@ public class MigrationFocusedSimulationService extends SimulationService {
         MostLikelyMigrationMatrix mostLikelyMigrationMatrix = new MostLikelyMigrationMatrix();
 
         for (Server server : servers) {
-            HashMap<Server, Long> mostLikelyMigrationDesintation = calculateMostLikelyMigrationMatrix(server, servers.stream().filter(s -> s != server).toList());
+            Map<Server, Long> mostLikelyMigrationDesintation = calculateMostLikelyMigrationMatrix(server, servers.stream().filter(s -> s != server).toList());
             mostLikelyMigrationMatrix.values.put(server, mostLikelyMigrationDesintation);
         }
 
@@ -70,12 +72,40 @@ public class MigrationFocusedSimulationService extends SimulationService {
     }
 
     MigrationResultsMatrix calculateMigrationResults(Fediverse fediverse, MostLikelyMigrationMatrix mostLikelyMigrationMatrix) {
-        // TODO
-        return null;
+        MigrationResultsMatrix migrationResultsMatrix = new MigrationResultsMatrix();
+
+        for (Server server : mostLikelyMigrationMatrix.values.keySet()) {
+            migrationResultsMatrix.values.put(server, 0L);
+        }
+
+        for (Map.Entry<Server, Map<Server, Long>> entry : mostLikelyMigrationMatrix.values.entrySet()) {
+            Server homeServer = entry.getKey();
+            Map<Server, Long> destPairs = entry.getValue();
+            migrationResultsMatrix.values.put(homeServer, calculateMigrationResultsForServer(homeServer, destPairs));
+        }
+
+        return migrationResultsMatrix;
+    }
+
+    Map<Server, Long> calculateMigrationResultsForServer(Server server, Map<Server, Long> mostLikelyMigrationMatrix) {
+        Map<Server, Long> results = new HashMap<>();
+        for (Map.Entry<Server, Long> entry : mostLikelyMigrationMatrix.entrySet()) {
+            Server desination = entry.getKey();
+            Long probability = entry.getValue();
+            results.put(desination, server.getUsersPerMonth() * probability);
+        }
+        return results;
     }
 
     void migrateUsers(Fediverse fediverse, MigrationResultsMatrix migrationResultsMatrix) {
-        // TODO
+        for (Server homeServer : fediverse.getServers()) {
+            for (Map.Entry<Server, Long> entry : migrationResultsMatrix.values.get(homeServer).entrySet()) {
+                Server desination = entry.getKey();
+                Long migratingUsers = entry.getValue();
+                homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() - migratingUsers);
+                desination.setUsersPerMonth(desination.getUsersPerMonth() + migratingUsers);
+            }
+        }
     }
 
     public void displayResults(Fediverse fediverse) {

@@ -4,7 +4,6 @@ import fediverse.fediversesim.model.Fediverse;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class SimpleSimulationService extends SimulationService {
 
         double totalUsers = 0;
 
-        // Calculate overall capital
+        // Calculate overall MAU
         for (Server server : servers) {
             totalUsers += server.getUsersPerMonth();
         }

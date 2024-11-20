@@ -66,11 +66,11 @@ public class MigrationFocusedSimulationService extends SimulationService {
         MigrationResultsMatrix migrationResultsMatrix = calculateMigrationResults(fediverse, mostLikelyMigrationMatrix);
 
         // Do migration
-        migrateUsers(fediverse, migrationResultsMatrix);
+        migrateUsers(migrationResultsMatrix);
     }
 
-    public HashMap<Server, Double> calculateMostLikelyMigrationMatrix(Server homeServer, List<Server> allServers) {
-        HashMap<Server, Double> result = new HashMap<>();
+    public Map<Server, Double> calculateMostLikelyMigrationMatrix(Server homeServer, List<Server> allServers) {
+        Map<Server, Double> result = new HashMap<>();
 
         for (Server otherServer : allServers) {
             if (otherServer != homeServer) {
@@ -111,20 +111,16 @@ public class MigrationFocusedSimulationService extends SimulationService {
         return results;
     }
 
-    void migrateUsers(Fediverse fediverse, MigrationResultsMatrix migrationResultsMatrix) {
-        fediverse.getServers().forEach(homeServer -> {
-            Map<Server, Long> result = migrationResultsMatrix.values.get(homeServer);
-            if (result != null) {
-                for (Map.Entry<Server, Long> entry : result.entrySet()) {
-                    Server desination = entry.getKey();
-                    Long migratingUsers = entry.getValue();
-                    homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() - migratingUsers);
-                    desination.setUsersPerMonth(desination.getUsersPerMonth() + migratingUsers);
-                }
-            } else {
-                log.info("No migration result for server {}", homeServer.toString());
+    void migrateUsers(MigrationResultsMatrix migrationResultsMatrix) {
+        for (Map.Entry<Server, Map<Server, Long>> migrationEntry : migrationResultsMatrix.values.entrySet()) {
+            Server homeServer = migrationEntry.getKey();
+            for (Map.Entry<Server, Long> entry : migrationEntry.getValue().entrySet()) {
+                Server destination = entry.getKey();
+                Long migratingUsers = entry.getValue();
+                homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() - migratingUsers);
+                destination.setUsersPerMonth(destination.getUsersPerMonth() + migratingUsers);
             }
-        });
+        }
     }
 
     public void displayResults(Fediverse fediverse) {

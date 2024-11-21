@@ -1,6 +1,7 @@
 package fediverse.fediversesim.controllers;
 
 import fediverse.fediversesim.model.Fediverse;
+import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 import fediverse.fediversesim.services.simulations.SimpleSimulationService;
@@ -47,11 +48,11 @@ public class SimulationController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<List<String>> getSimulation(@PathVariable String id) {
+    ResponseEntity<FediverseHistory> getSimulation(@PathVariable String id) {
         Optional<Simulation> simulationOptional = simulationList.stream().filter(s -> s.getId().equals(id)).findFirst();
         if (simulationOptional.isPresent()) {
             Simulation simulation = simulationOptional.get();
-            return ResponseEntity.ok().body(simulation.getResult());
+            return ResponseEntity.ok().body(simulation.getFediverseHistory());
         } else {
             return ResponseEntity.badRequest().build();
         }

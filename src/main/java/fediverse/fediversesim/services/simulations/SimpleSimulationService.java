@@ -1,6 +1,7 @@
 package fediverse.fediversesim.services.simulations;
 
 import fediverse.fediversesim.model.Fediverse;
+import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
@@ -19,26 +20,27 @@ public class SimpleSimulationService extends SimulationService {
     }
 
     public void runSimulation(Simulation simulation) {
-        List<String> result = new ArrayList<>();
-        Fediverse fediverse = simulation.getFediverse();
+        FediverseHistory fediverseHistory = simulation.getFediverseHistory();
 
         int year = 2024;
-        fediverse.setYear(year);
-        this.displayResults(fediverse);
-        result.add(fediverse.toString());
+        Fediverse lastState = fediverseHistory.getAllStates().get(0);
+        lastState.setYear(year);
+        this.displayResults(lastState);
         while (year <= 2034) {
             year++;
-            fediverse.setYear(year);
-            this.simulateYear(fediverse);
-            this.displayResults(fediverse);
-            result.add(fediverse.toString());
+            Fediverse currentState = this.simulateYear(lastState);
+            currentState.setYear(year);
+            fediverseHistory.getAllStates().add(currentState);
+            this.displayResults(currentState);
+            lastState = currentState;
         }
-
-        simulation.setResult(result);
     }
 
-    public void simulateYear(Fediverse fediverse) {
-        List<Server> servers = fediverse.getServers();
+    public Fediverse simulateYear(Fediverse currentFediverseState) {
+        Fediverse resultState = new Fediverse();
+        resultState.getServers().addAll(currentFediverseState.getServers().stream().map(s -> new Server(s.getSimulationService(), s.getName(), s.getUsersPerMonth(), s.getId())).toList());
+
+        List<Server> servers = resultState.getServers();
 
         double totalUsers = 0;
 
@@ -66,6 +68,8 @@ public class SimpleSimulationService extends SimulationService {
             losingServer.setUsersPerMonth(losingServer.getUsersPerMonth() - newUsers);
             winningServerB.setUsersPerMonth(winningServerB.getUsersPerMonth() + newUsers);
         }
+
+        return resultState;
     }
 
     private Server getRandomNonEmptyServer(List<Server> servers, Server exception) {

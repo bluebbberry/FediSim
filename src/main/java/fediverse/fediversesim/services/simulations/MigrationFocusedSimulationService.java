@@ -1,12 +1,8 @@
 package fediverse.fediversesim.services.simulations;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.*;
 
+import fediverse.fediversesim.model.FediverseHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -33,26 +29,27 @@ public class MigrationFocusedSimulationService extends SimulationService {
     }
 
     public void runSimulation(Simulation simulation) {
-        List<String> result = new ArrayList<>();
-        Fediverse fediverse = simulation.getFediverse();
+        FediverseHistory fediverseHistory = simulation.getFediverseHistory();
 
         int year = 2024;
-        fediverse.setYear(year);
-        this.displayResults(fediverse);
-        result.add(fediverse.toString());
+        Fediverse lastState = fediverseHistory.getAllStates().get(0);
+        lastState.setYear(year);
+        this.displayResults(lastState);
         while (year <= 2034) {
             year++;
-            fediverse.setYear(year);
-            this.simulateYear(fediverse);
-            this.displayResults(fediverse);
-            result.add(fediverse.toString());
+            Fediverse currentState = this.simulateYear(lastState);
+            currentState.setYear(year);
+            fediverseHistory.getAllStates().add(currentState);
+            this.displayResults(currentState);
+            lastState = currentState;
         }
-
-        simulation.setResult(result);
     }
 
-    public void simulateYear(Fediverse fediverse) {
-        List<Server> servers = fediverse.getServers();
+    public Fediverse simulateYear(Fediverse currentFediverseState) {
+        Fediverse resultState = new Fediverse();
+        resultState.getServers().addAll(currentFediverseState.getServers().stream().map(s -> new Server(s.getSimulationService(), s.getName(), s.getUsersPerMonth(), s.getId())).toList());
+
+        List<Server> servers = currentFediverseState.getServers();
 
         // Calculate migration matrices
         MostLikelyMigrationMatrix mostLikelyMigrationMatrix = new MostLikelyMigrationMatrix();
@@ -63,10 +60,12 @@ public class MigrationFocusedSimulationService extends SimulationService {
         }
 
         // Simulate user migration
-        MigrationResultsMatrix migrationResultsMatrix = calculateMigrationResults(fediverse, mostLikelyMigrationMatrix);
+        MigrationResultsMatrix migrationResultsMatrix = calculateMigrationResults(currentFediverseState, mostLikelyMigrationMatrix);
 
         // Do migration
-        migrateUsers(migrationResultsMatrix);
+        migrateUsers(resultState, migrationResultsMatrix);
+
+        return resultState;
     }
 
     public Map<Server, Double> calculateMostLikelyMigrationMatrix(Server homeServer, List<Server> allServers) {
@@ -111,14 +110,15 @@ public class MigrationFocusedSimulationService extends SimulationService {
         return results;
     }
 
-    void migrateUsers(MigrationResultsMatrix migrationResultsMatrix) {
+    void migrateUsers(Fediverse fediverseState, MigrationResultsMatrix migrationResultsMatrix) {
         for (Map.Entry<Server, Map<Server, Long>> migrationEntry : migrationResultsMatrix.values.entrySet()) {
             Server homeServer = migrationEntry.getKey();
             for (Map.Entry<Server, Long> entry : migrationEntry.getValue().entrySet()) {
                 Server destination = entry.getKey();
                 Long migratingUsers = entry.getValue();
                 homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() - migratingUsers);
-                destination.setUsersPerMonth(destination.getUsersPerMonth() + migratingUsers);
+                migrateUsersFromServerWithUuid(fediverseState, homeServer.getId(), migratingUsers);
+                migrateUsersToServerWithUuid(fediverseState, destination.getId(), migratingUsers);
             }
         }
     }
@@ -127,6 +127,28 @@ public class MigrationFocusedSimulationService extends SimulationService {
         System.out.println("=== Year " + fediverse.getYear() + " ===");
         for (Server server : fediverse.getServers()) {
             System.out.println(server.toString());
+        }
+    }
+
+    private void migrateUsersFromServerWithUuid(Fediverse fediverseState, String serverId, long numOfUsers) {
+        Optional<Server> homeServerOptional = fediverseState.getServers().stream().filter(s -> s.getId().equals(serverId)).findFirst();
+
+        if (homeServerOptional.isPresent()) {
+            Server homeServer = homeServerOptional.get();
+            homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() - numOfUsers);
+        } else {
+            throw new IllegalStateException("Did not find server with id '" + serverId + "'in Fediverse state");
+        }
+    }
+
+    private void migrateUsersToServerWithUuid(Fediverse fediverseState, String serverId, long numOfUsers) {
+        Optional<Server> homeServerOptional = fediverseState.getServers().stream().filter(s -> s.getId().equals(serverId)).findFirst();
+
+        if (homeServerOptional.isPresent()) {
+            Server homeServer = homeServerOptional.get();
+            homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() + numOfUsers);
+        } else {
+            throw new IllegalStateException("Did not find server with id '" + serverId + "'in Fediverse state");
         }
     }
 }

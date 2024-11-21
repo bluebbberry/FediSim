@@ -23,19 +23,23 @@ public class FediverseSimApplication {
 		fediverse.getServers().add(new Server(
 				simulationService,
 				"Lemmy",
-				 1000));
+				 1000,
+				null));
 		fediverse.getServers().add(new Server(
 				simulationService,
 				"Bluesky",
-				 4000
+				 4000,
+				null
 				));
 		fediverse.getServers().add(new Server(simulationService,
 				"Mastodon",
-				 15000
+				 15000,
+				null
 				));
 		fediverse.getServers().add(new Server(simulationService,
 				"Threads",
-				20000));
+				20000,
+				null));
 		simulationService.runSimulation(new Simulation(fediverse));
 	}
 }

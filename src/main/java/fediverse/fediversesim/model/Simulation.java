@@ -7,12 +7,12 @@ import java.util.UUID;
 
 @Data
 public class Simulation {
-    private Fediverse fediverse;
+    private FediverseHistory fediverseHistory;
     private String id;
-    private List<String> result;
 
-    public Simulation(Fediverse fediverse) {
-        this.fediverse = fediverse;
+    public Simulation(Fediverse startState) {
+        this.fediverseHistory = new FediverseHistory();
+        fediverseHistory.allStates.add(startState);
         this.id = UUID.randomUUID().toString();
     }
 }

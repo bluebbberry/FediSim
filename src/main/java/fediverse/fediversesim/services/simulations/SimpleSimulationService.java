@@ -1,13 +1,12 @@
 package fediverse.fediversesim.services.simulations;
 
-import fediverse.fediversesim.model.Fediverse;
+import fediverse.fediversesim.model.FediverseState;
 import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.Server;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,12 +22,12 @@ public class SimpleSimulationService extends SimulationService {
         FediverseHistory fediverseHistory = simulation.getFediverseHistory();
 
         int year = 2024;
-        Fediverse lastState = fediverseHistory.getAllStates().get(0);
+        FediverseState lastState = fediverseHistory.getAllStates().get(0);
         lastState.setYear(year);
         this.displayResults(lastState);
         while (year <= 2034) {
             year++;
-            Fediverse currentState = this.simulateYear(lastState);
+            FediverseState currentState = this.simulateYear(lastState);
             currentState.setYear(year);
             fediverseHistory.getAllStates().add(currentState);
             this.displayResults(currentState);
@@ -36,8 +35,8 @@ public class SimpleSimulationService extends SimulationService {
         }
     }
 
-    public Fediverse simulateYear(Fediverse currentFediverseState) {
-        Fediverse resultState = new Fediverse();
+    public FediverseState simulateYear(FediverseState currentFediverseState) {
+        FediverseState resultState = new FediverseState();
         resultState.getServers().addAll(currentFediverseState.getServers().stream().map(s -> new Server(s.getSimulationService(), s.getName(), s.getUsersPerMonth(), s.getId())).toList());
 
         List<Server> servers = resultState.getServers();
@@ -82,9 +81,9 @@ public class SimpleSimulationService extends SimulationService {
         return nonEmptyServers.get(randomServerId);
     }
 
-    public void displayResults(Fediverse fediverse) {
-        System.out.println("=== Year " + fediverse.getYear() + " ===");
-        for (Server server : fediverse.getServers()) {
+    public void displayResults(FediverseState fediverseState) {
+        System.out.println("=== Year " + fediverseState.getYear() + " ===");
+        for (Server server : fediverseState.getServers()) {
             System.out.println(server.toString());
         }
     }

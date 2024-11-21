@@ -1,12 +1,11 @@
 package fediverse.fediversesim.controllers;
 
-import fediverse.fediversesim.model.Fediverse;
+import fediverse.fediversesim.model.FediverseState;
 import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 import fediverse.fediversesim.services.simulations.SimpleSimulationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +26,8 @@ public class SimulationController {
     }
 
     @PostMapping("/create")
-    ResponseEntity<String> createSimulation(@RequestBody Fediverse fediverse) {
-        Simulation simulation = new Simulation(fediverse);
+    ResponseEntity<String> createSimulation(@RequestBody FediverseState fediverseState) {
+        Simulation simulation = new Simulation(fediverseState);
         simulationList.add(simulation);
         log.info("Created new simulation with id '{}'", simulation.getId());
         return ResponseEntity.ok().body(simulation.getId());

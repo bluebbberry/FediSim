@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Fediverse {
+public class FediverseState {
     @JsonProperty("servers")
     private final List<Server> servers;
     @JsonProperty("year")
     private long year;
 
-    public Fediverse() {
+    public FediverseState() {
         this.servers = new ArrayList<>();
     }
 

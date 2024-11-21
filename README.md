@@ -1,7 +1,7 @@
 # FediverseSim
 
 Fediverse simulation software.
-Provides an API to simulate a customizable fediverse model for the next few years.
+Provides an API to simulate a customizable fediverseState model for the next few years.
 
 API-requests can be send to `/simulate``-POST with the following JSON-body:
 

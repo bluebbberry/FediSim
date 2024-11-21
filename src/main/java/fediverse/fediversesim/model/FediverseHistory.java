@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 public class FediverseHistory {
     @JsonProperty("allStates")
-    List<Fediverse> allStates = new ArrayList<>();
+    List<FediverseState> allStates = new ArrayList<>();
 }

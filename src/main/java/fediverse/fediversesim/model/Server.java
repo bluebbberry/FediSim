@@ -28,17 +28,20 @@ public class Server {
 //    private double conservativeLeaningPopulation;
 //    private SimulationService simulationService;
 
-    public Server(SimulationService simulationService, String name, long initialUsersPerMonth, String id) {
+    public Server(SimulationService simulationService, String name, long initialUsersPerMonth) {
         this.simulationService = simulationService;
         this.name = name;
 //        this.economicCapital = initialEconomicCapital;
         this.usersPerMonth = initialUsersPerMonth;
 //        this.computationalCapital = initialComputationCapital;
-        if (id == null) {
-            this.id = UUID.randomUUID().toString();
-        } else {
-            this.id = id;
-        }
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public Server(Server server) {
+        this.simulationService = server.getSimulationService();
+        this.name = server.getName();
+        this.usersPerMonth = server.getUsersPerMonth();
+        this.id = server.getId();
     }
 
     @Override

@@ -2,13 +2,11 @@ package fediverse.fediversesim.services.simulations;
 
 import java.util.*;
 
-import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.FediverseState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import fediverse.fediversesim.model.Server;
-import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 
 class MostLikelyMigrationMatrix {
@@ -28,26 +26,9 @@ public class MigrationFocusedSimulationService extends SimulationService {
         this.random = new Random();
     }
 
-    public void runSimulation(Simulation simulation) {
-        FediverseHistory fediverseHistory = simulation.getFediverseHistory();
-
-        int year = 2024;
-        FediverseState lastState = fediverseHistory.getAllStates().get(0);
-        lastState.setYear(year);
-        this.displayResults(lastState);
-        while (year <= 2034) {
-            year++;
-            FediverseState currentState = this.simulateYear(lastState);
-            currentState.setYear(year);
-            fediverseHistory.getAllStates().add(currentState);
-            this.displayResults(currentState);
-            lastState = currentState;
-        }
-    }
-
     public FediverseState simulateYear(FediverseState currentFediverseState) {
         FediverseState resultState = new FediverseState();
-        resultState.getServers().addAll(currentFediverseState.getServers().stream().map(s -> new Server(s.getSimulationService(), s.getName(), s.getUsersPerMonth(), s.getId())).toList());
+        resultState.getServers().addAll(currentFediverseState.getServers().stream().map(Server::new).toList());
 
         List<Server> servers = currentFediverseState.getServers();
 

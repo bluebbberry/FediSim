@@ -49,14 +49,26 @@ public class MigrationFocusedSimulationService extends SimulationService {
         return resultState;
     }
 
+    // Source: http://www.eecs.qmul.ac.uk/~tysong/files/Migration-IMC23.pdf
+    // "A unique feature of Mastodon is that users can easily ‘switch’ in-
+    //stance. This involves migrating their data from one instance to
+    //another. We are curious to see if this is also driven by network ef-
+    //fects. Overall, 4.09% of the users have switched from the Mastodon
+    //instance they initially created an account on (hereinafter first in-
+    //stance) to a new instance (hereinafter second instance). Curiously,
+    //97.22% of these switches happened after Musk’s Twitter takeover.
+    //This suggests that some users have backtracked on their instance
+    //choices, perhaps after finding a more suitable one.
+    // --> 4% seems to be somewhat of a maximum"
     public Map<Server, Double> calculateMostLikelyMigrationMatrix(Server homeServer, List<Server> allServers) {
         Map<Server, Double> result = new HashMap<>();
 
         for (Server otherServer : allServers) {
+            double percentageThatMigrates = this.random.nextDouble() * 0.04;
             if (otherServer != homeServer) {
-                result.put(otherServer, 0.8 / allServers.size());
+                result.put(otherServer, percentageThatMigrates / allServers.size());
             } else {
-                result.put(otherServer, 0.8);
+                result.put(otherServer, 1 - percentageThatMigrates);
             }
         }
 

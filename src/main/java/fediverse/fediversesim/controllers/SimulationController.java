@@ -51,11 +51,13 @@ public class SimulationController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<FediverseHistory> getSimulation(@PathVariable String id) {
+    ResponseEntity<HashMap<String, FediverseHistory>> getSimulation(@PathVariable String id) {
         Optional<Simulation> simulationOptional = simulationList.stream().filter(s -> s.getId().equals(id)).findFirst();
         if (simulationOptional.isPresent()) {
             Simulation simulation = simulationOptional.get();
-            return ResponseEntity.ok().body(simulation.getFediverseHistory());
+            HashMap<String, FediverseHistory> response = new HashMap<>();
+            response.put("simulation", simulation.getFediverseHistory());
+            return ResponseEntity.ok().body(response);
         } else {
             return ResponseEntity.badRequest().build();
         }

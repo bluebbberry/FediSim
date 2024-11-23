@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,13 @@ public class SimulationController {
     }
 
     @PostMapping("/create")
-    ResponseEntity<String> createSimulation(@RequestBody FediverseState fediverseState) {
+    ResponseEntity<HashMap<String, String>> createSimulation(@RequestBody FediverseState fediverseState) {
         Simulation simulation = new Simulation(fediverseState);
         simulationList.add(simulation);
         log.info("Created new simulation with id '{}'", simulation.getId());
-        return ResponseEntity.ok().body(simulation.getId());
+        HashMap<String, String> response = new HashMap<>();
+        response.put("id", simulation.getId());
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/start/{id}")

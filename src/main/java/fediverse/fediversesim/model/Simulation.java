@@ -11,7 +11,7 @@ public class Simulation {
 
     public Simulation(FediverseState startState) {
         this.fediverseHistory = new FediverseHistory();
-        fediverseHistory.allStates.add(startState);
+        fediverseHistory.fediverseStates.add(startState);
         this.id = UUID.randomUUID().toString();
     }
 }

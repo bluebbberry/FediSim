@@ -8,6 +8,6 @@ import java.util.List;
 
 @Data
 public class FediverseHistory {
-    @JsonProperty("allStates")
-    List<FediverseState> allStates = new ArrayList<>();
+    @JsonProperty("fediverseStates")
+    List<FediverseState> fediverseStates = new ArrayList<>();
 }

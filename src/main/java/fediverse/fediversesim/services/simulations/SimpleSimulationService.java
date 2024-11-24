@@ -1,9 +1,10 @@
 package fediverse.fediversesim.services.simulations;
 
-import fediverse.fediversesim.model.Fediverse;
+import fediverse.fediversesim.model.FediverseState;
+import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.Server;
+import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,25 +18,15 @@ public class SimpleSimulationService extends SimulationService {
         this.random = new Random();
     }
 
-    public String runSimulation(Fediverse fediverse) {
-        int year = 2024;
-        fediverse.setYear(year);
-        this.displayResults(fediverse);
-        while (year <= 2034) {
-            this.simulateYear(fediverse);
-            this.displayResults(fediverse);
-            year++;
-            fediverse.setYear(year);
-        }
-        return "success";
-    }
+    public FediverseState simulateYear(FediverseState currentFediverseState) {
+        FediverseState resultState = new FediverseState();
+        resultState.getServers().addAll(currentFediverseState.getServers().stream().map(Server::new).toList());
 
-    public void simulateYear(Fediverse fediverse) {
-        List<Server> servers = fediverse.getServers();
+        List<Server> servers = resultState.getServers();
 
         double totalUsers = 0;
 
-        // Calculate overall capital
+        // Calculate overall MAU
         for (Server server : servers) {
             totalUsers += server.getUsersPerMonth();
         }
@@ -59,6 +50,8 @@ public class SimpleSimulationService extends SimulationService {
             losingServer.setUsersPerMonth(losingServer.getUsersPerMonth() - newUsers);
             winningServerB.setUsersPerMonth(winningServerB.getUsersPerMonth() + newUsers);
         }
+
+        return resultState;
     }
 
     private Server getRandomNonEmptyServer(List<Server> servers, Server exception) {
@@ -71,9 +64,9 @@ public class SimpleSimulationService extends SimulationService {
         return nonEmptyServers.get(randomServerId);
     }
 
-    public void displayResults(Fediverse fediverse) {
-        System.out.println("=== Year " + fediverse.getYear() + " ===");
-        for (Server server : fediverse.getServers()) {
+    public void displayResults(FediverseState fediverseState) {
+        System.out.println("=== Year " + fediverseState.getYear() + " ===");
+        for (Server server : fediverseState.getServers()) {
             System.out.println(server.toString());
         }
     }

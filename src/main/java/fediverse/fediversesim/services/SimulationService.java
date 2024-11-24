@@ -10,14 +10,16 @@ public abstract class SimulationService {
     public void runSimulation(Simulation simulation) {
         FediverseHistory fediverseHistory = simulation.getFediverseHistory();
 
-        int year = 2024;
+        long startYear = simulation.getFediverseHistory().getAllStates().get(0).getYear();
+        long currentYear = startYear;
+        long simulationTime = 10;
         FediverseState lastState = fediverseHistory.getAllStates().get(0);
-        lastState.setYear(year);
+        lastState.setYear(currentYear);
         this.displayResults(lastState);
-        while (year <= 2034) {
-            year++;
+        while (currentYear <= startYear + simulationTime) {
+            currentYear++;
             FediverseState currentState = this.simulateYear(lastState);
-            currentState.setYear(year);
+            currentState.setYear(currentYear);
             fediverseHistory.getAllStates().add(currentState);
             this.displayResults(currentState);
             lastState = currentState;

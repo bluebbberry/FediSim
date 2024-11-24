@@ -1,4 +1,4 @@
-# FediverseSim
+# FediSim
 
 Fediverse simulation software.
 Provides an API to simulate a customizable fediverseState model for the next few years.

@@ -23,6 +23,11 @@ public class SimulationController {
 
     List<Simulation> simulationList = new ArrayList<>();
 
+    @GetMapping("/types")
+    ResponseEntity<String[]> getSimulationTypes() {
+        return ResponseEntity.ok().body(SimulationTypeManager.getAll());
+    }
+
     @PostMapping("/create")
     ResponseEntity<HashMap<String, String>> createSimulation(@RequestBody Simulation simulation) {
         simulationList.add(simulation);

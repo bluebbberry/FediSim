@@ -18,4 +18,8 @@ public class SimulationTypeManager {
     public static SimulationService getByName(String name) {
         return allSimulationTypes.get(name);
     }
+
+    public static String[] getAll() {
+        return allSimulationTypes.keySet().toArray(new String[0]);
+    }
 }

@@ -12,7 +12,7 @@ public abstract class SimulationService {
 
         long startYear = simulation.getFediverseHistory().getFediverseStates().get(0).getYear();
         long currentYear = startYear;
-        long simulationTime = 10;
+        long simulationTime = simulation.getDuration();
         FediverseState lastState = fediverseHistory.getFediverseStates().get(0);
         lastState.setYear(currentYear);
         this.displayResults(lastState);

@@ -33,6 +33,7 @@ public class FediverseSimApplication {
 		fediverseState.getServers().add(new Server(simulationService,
 				"Threads",
 				20000));
-		simulationService.runSimulation(new Simulation(fediverseState));
+		Simulation simulation = new Simulation(fediverseState, "simple", 10);
+		simulationService.runSimulation(simulation);
 	}
 }

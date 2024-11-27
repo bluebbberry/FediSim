@@ -5,6 +5,7 @@ import fediverse.fediversesim.model.FediverseHistory;
 import fediverse.fediversesim.model.Simulation;
 import fediverse.fediversesim.services.SimulationService;
 import fediverse.fediversesim.services.simulations.SimpleSimulationService;
+import fediverse.fediversesim.services.simulations.SimulationTypeManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,10 @@ import java.util.Optional;
 @Slf4j
 public class SimulationController {
 
-    SimulationService simulationService;
     List<Simulation> simulationList = new ArrayList<>();
 
-    public SimulationController(SimpleSimulationService simulationService) {
-        this.simulationService = simulationService;
-    }
-
     @PostMapping("/create")
-    ResponseEntity<HashMap<String, String>> createSimulation(@RequestBody FediverseState fediverseState) {
-        Simulation simulation = new Simulation(fediverseState);
+    ResponseEntity<HashMap<String, String>> createSimulation(@RequestBody Simulation simulation) {
         simulationList.add(simulation);
         log.info("Created new simulation with id '{}'", simulation.getId());
         HashMap<String, String> response = new HashMap<>();
@@ -43,6 +38,7 @@ public class SimulationController {
         if (simulationOptional.isPresent()) {
             log.info("Start simulation");
             Simulation simulation = simulationOptional.get();
+            SimulationService simulationService = SimulationTypeManager.getByName(simulation.getType());
             simulationService.runSimulation(simulation);
             return ResponseEntity.ok().build();
         } else {

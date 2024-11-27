@@ -30,7 +30,7 @@ public class MigrationFocusedSimulationService extends SimulationService {
         FediverseState resultState = new FediverseState();
         resultState.getServers().addAll(currentFediverseState.getServers().stream().map(Server::new).toList());
 
-        List<Server> servers = currentFediverseState.getServers();
+        List<Server> servers = resultState.getServers();
 
         // Calculate migration matrices
         MostLikelyMigrationMatrix mostLikelyMigrationMatrix = new MostLikelyMigrationMatrix();
@@ -109,7 +109,6 @@ public class MigrationFocusedSimulationService extends SimulationService {
             for (Map.Entry<Server, Long> entry : migrationEntry.getValue().entrySet()) {
                 Server destination = entry.getKey();
                 Long migratingUsers = entry.getValue();
-                homeServer.setUsersPerMonth(homeServer.getUsersPerMonth() - migratingUsers);
                 migrateUsersFromServerWithUuid(fediverseState, homeServer.getId(), migratingUsers);
                 migrateUsersToServerWithUuid(fediverseState, destination.getId(), migratingUsers);
             }

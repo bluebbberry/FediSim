@@ -23,6 +23,7 @@ public class Simulation {
     public Simulation(FediverseState startState, String type, long duration) {
         this.fediverseHistory = new FediverseHistory();
         fediverseHistory.fediverseStates.add(startState);
+        this.startState = startState;
         this.id = UUID.randomUUID().toString();
         this.type = type;
         this.duration = duration;
